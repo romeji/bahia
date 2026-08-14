@@ -10,20 +10,19 @@ La première version financièrement raisonnable doit cibler **OKX Spot + OKX De
 
 Il est impossible de garantir un produit « gagnant ». Le contrat produit réaliste est : exécution correcte, pertes bornées, mesures honnêtes, explicabilité, reprise après incident et passage progressif paper → demo → réel.
 
-## Audit du dépôt existant
+## Audit du dépôt actuel
 
-État observé :
+État observé au 14 août 2026 :
 
-- Site statique HTML/CSS/JavaScript, sans framework ni build.
-- `api/market.js` relaie les tickers publics OKX pour BTC et ETH.
-- L'ancien moteur `app.js` fonctionne dans le navigateur et persiste dans `localStorage`.
-- La nouvelle page `index.html` référence `v2.js`, mais ce fichier n'existe pas : la nouvelle interface n'est donc pas fonctionnelle localement.
-- `v2.css` existe, tandis que `styles.css` et `app.js` correspondent à l'ancienne interface.
-- Aucun dépôt Git n'est initialisé dans le workspace ; aucun push propre n'est possible dans cet état.
-- Aucun stockage serveur, utilisateur, worker 24/7, WebSocket privé, gestionnaire d'ordres ni intégration OKX authentifiée.
-- Le README décrit encore l'ancien MVP et ne correspond plus au nouvel HTML.
+- PWA Next.js 16 et React 19, responsive desktop/mobile, déployée sur Vercel.
+- Cotations et bougies publiques OKX pour BTC, ETH et SOL via des Route Handlers serveur.
+- Paper trading local avec frais, glissement, stops, objectifs, journal, export CSV et sauvegarde JSON.
+- Moteur de risque déterministe testé : sizing par le stop, plafonds d'exposition, réserve, perte quotidienne, drawdown et kill switch.
+- Analyse descriptive : SMA 20/50, RSI 14, ATR, volatilité annualisée, régime et score de risque.
+- Statistiques : profit factor, espérance, payoff, séries, drawdown réalisé, durée, ventilation par actif et qualité d'échantillon.
+- Connecteur OKX Demo côté serveur prêt, mais non configuré en production.
 
-Verdict : **prototype visuel et paper trading local, pas une base de production**. Il vaut mieux conserver la direction graphique, mais reconstruire le moteur et les contrats API proprement.
+Limites restantes : pas de compte utilisateur, pas de stockage PostgreSQL, pas de worker 24/7, pas de flux privé, pas de réconciliation d'ordres et aucune autorisation de trading réel. La version publiée est donc **complète pour apprendre et simuler**, pas pour confier de vrais fonds.
 
 ## Ce que font les références sérieuses
 
@@ -34,6 +33,15 @@ Verdict : **prototype visuel et paper trading local, pas une base de production*
 | Pionex | Grid, DCA, rebalancing, spot-futures, presets simples, mobile | Marketing de performance, stratégies faciles à mal paramétrer |
 | 3Commas / Cryptohopper / Bitsgap | Smart orders, multi-exchange, paper trading, marketplace de signaux | Complexité, abonnements, dépendance aux API tierces |
 | Terminaux avancés | Ordres conditionnels, alertes, portefeuille consolidé | Interface intimidante pour un débutant |
+
+### Benchmark UX actualisé
+
+- **3Commas** utilise un parcours de démarrage progressif, des cartes de stratégies avec dépôt minimum, APY/backtest et drawdown, ainsi qu'un guide débutant. Bahia reprend le stepper et la comparaison, mais remplace l'APY promotionnel par un score d'éléments non prédictif et un avertissement d'échantillon.
+- **Coinrule** rend l'automatisation accessible avec une logique « si ceci, alors cela » et des modèles sans code. Bahia conserve des choix exprimés par intention — observer, fractionner, rééquilibrer — avant d'exposer le jargon.
+- **Cryptohopper** associe paper trading, backtests, constructeur de stratégies et déclencheurs. Bahia reprend la séquence construire → tester → activer, avec des limites de risque visibles avant l'action.
+- **Pionex / OKX** rendent Grid, DCA et Smart Portfolio très accessibles. Bahia ajoute une contrainte : une Grid est refusée hors range et l'arbitrage reste verrouillé sans deuxième plateforme, capital prépositionné et calcul des coûts.
+
+Sources officielles consultées le 14 août 2026 : [interface 3Commas](https://help.3commas.io/en/articles/3108945-dashboard-the-3commas-user-interface), [présentation Coinrule](https://help.coinrule.com/articles/711711-what-is-coinrule), [fonctionnalités Cryptohopper](https://www.cryptohopper.com/features/all-features/strategies), [paper trading Cryptohopper](https://www.cryptohopper.com/features/paper-trading), [bots OKX](https://www.okx.com/en-us/help/what-are-okx-eeas-crypto-trading-bots-and-how-do-i-utilize-them), [Spot Grid OKX](https://www.okx.com/en-us/help/spot-grid-bot-faq).
 
 La meilleure idée produit de Pionex est l'association « régime de marché → stratégie adaptée » : grid en marché latéral, tendance quand le marché est directionnel, rebalancing pour un portefeuille long terme. Un grid n'est pas un arbitrage sans risque : il peut accumuler un actif qui baisse et sous-performer un simple achat en forte hausse.
 

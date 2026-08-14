@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "npm run test:risk && npm run test:okx",
+    "test": "npm run test:core && npm run test:okx",
+    "test:core": "node --test --test-isolation=none --experimental-strip-types tests/risk-engine.test.ts tests/performance.test.ts",
     "test:risk": "node --test --test-isolation=none --experimental-strip-types tests/risk-engine.test.ts",
     "test:okx": "tsc -p tsconfig.okx-tests.json && node --test --test-isolation=none .tmp-okx-tests/__tests__/validation.test.js .tmp-okx-tests/__tests__/public-client.test.js .tmp-okx-tests/__tests__/server.test.js"
   },
