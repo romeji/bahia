@@ -1,0 +1,11 @@
+node_modules/
+.next/
+.vercel/
+.env*
+!.env.example
+coverage/
+.tmp-okx-tests/
+tsconfig.tsbuildinfo
+*.log
+.gh-auth-*.log
+.DS_Store
